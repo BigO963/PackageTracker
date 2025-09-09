@@ -16,7 +16,7 @@ namespace PackageTracker.Server
         {
             modelBuilder.Entity<Package>().OwnsOne(p => p.Sender);
             modelBuilder.Entity<Package>().OwnsOne(p => p.Recipient);
-
+            modelBuilder.Entity<Package>().OwnsMany<StatusHistory>(p => p.History);
         }
 
         public DbSet<Package> Packages { get; set; }
@@ -24,5 +24,7 @@ namespace PackageTracker.Server
         public DbSet<PackageSender> PackageSenders { get; set; }
 
         public DbSet<PackageRecipient> PackageRecipients { get; set; }
+
+        public DbSet<StatusHistory> StatusHistory { get; set; }
     }
 }
