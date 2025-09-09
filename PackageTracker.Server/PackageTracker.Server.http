@@ -3,3 +3,5 @@
 GET {{PackageTracker.Server_HostAddress}}/packages/
 Accept: application/json
 ###
+GET {{PackageTracker.Server_HostAddress}}/package/{id}
+Accept: application/json
