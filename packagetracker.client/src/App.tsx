@@ -1,7 +1,17 @@
 ﻿import { useEffect, useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PackageDetails from './Components/PackageDetails';
+import AddPackage from './Components/AddPackage';
+import Button from '@mui/material/Button';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 interface Package {
     packageId: string,
@@ -20,11 +30,18 @@ interface Package {
     createdAt: string
 }
 
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
+
 
 function PackageList() {
     const [packages, setPackages] = useState<Package[]>([]);
     const [trackingFilter, setTrackingFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('');
+    const [addOpen, setAddOpen] = useState(false);
 
     const statusTransition: Record<string, string[]> = {
         Created: ["Sent", "Canceled"],
@@ -106,68 +123,81 @@ function PackageList() {
 
     return (
         <div>
+           
+
             <h1 id="tableLabel">Package Information</h1>
 
-            <div style={{ marginBottom: '10px' }}>
-                <input
-                    type="text"
-                    placeholder="Filter by tracking number"
-                    value={trackingFilter}
-                    onChange={e => setTrackingFilter(e.target.value)}
-                    style={{ marginRight: '10px' }}
-                />
+            <div className="package-wrapper">
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <AddPackage
+                        open={addOpen}
+                        onClose={() => setAddOpen(false)}
+                        onPackageAdded={populatePackageData}
+                    />
+                </div>
+                <div className="input-wrapper">
+                    <input
+                        type="text"
+                        placeholder="Filter by tracking number"
+                        value={trackingFilter}
+                        onChange={e => setTrackingFilter(e.target.value)}
+                        style={{ marginRight: '10px' }}
+                    />
 
-                <select
-                    value={statusFilter}
-                    onChange={e => setStatusFilter(e.target.value)}
-                >
-                    <option value="">All statuses</option>
-                    <option value="Created">Created</option>
-                    <option value="Sent">Sent</option>
-                    <option value="Accepted">Accepted</option>
-                    <option value="Returned">Returned</option>
-                    <option value="Canceled">Canceled</option>
-                </select>
+                    <select
+                        value={statusFilter}
+                        onChange={e => setStatusFilter(e.target.value)}
+                    >
+                        <option value="">All statuses</option>
+                        <option value="Created">Created</option>
+                        <option value="Sent">Sent</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Returned">Returned</option>
+                        <option value="Canceled">Canceled</option>
+                    </select>
+                </div>
             </div>
+            <TableContainer component={Paper }>
+                <Table className="table table-striped" aria-labelledby="tableLabel">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Status</TableCell>
+                            <TableCell>Tracking Number</TableCell>
+                            <TableCell>Sender</TableCell>
+                            <TableCell>Recipient</TableCell>
+                            <TableCell>Created</TableCell>
+                            <TableCell>Change Status</TableCell>
+                            <TableCell>Details</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {filteredPackages.map(pckg =>
+                            <TableRow key={pckg.packageId}>
+                                <TableCell className={pckg.status}>{pckg.status}</TableCell>
+                                <TableCell>{pckg.trackingNumber}</TableCell>
+                                <TableCell>{pckg.sender.senderName}</TableCell>
+                                <TableCell>{pckg.recipient.recipientName}</TableCell>
+                                <TableCell>{new Date(pckg.createdAt).toLocaleDateString()}</TableCell>
+                                <TableCell>
+                                    {statusTransition[pckg.status]?.map(nextStatus => (
+                                        <button
+                                            key={nextStatus}
+                                            onClick={() => changeStatus(pckg.packageId, nextStatus)}
+                                        >
+                                            {nextStatus}
+                                        </button>
+                                    ))}
+                                </TableCell>
+                                <TableCell>
+                                    <nav><Link to={`/packages/${pckg.packageId}`}>Details</Link></nav>
 
-            <table className="table table-striped" aria-labelledby="tableLabel">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Tracking Number</th>
-                        <th>Sender</th>
-                        <th>Recipient</th>
-                        <th>Created</th>
-                        <th>Change Status</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredPackages.map(pckg =>
-                        <tr key={pckg.packageId}>
-                            <td className={pckg.status}>{pckg.status}</td>
-                            <td>{pckg.trackingNumber}</td>
-                            <td>{pckg.sender.senderName}</td>
-                            <td>{pckg.recipient.recipientName}</td>
-                            <td>{new Date(pckg.createdAt).toLocaleDateString()}</td>
-                            <td>
-                                {statusTransition[pckg.status]?.map(nextStatus => (
-                                    <button
-                                        key={nextStatus}
-                                        onClick={() => changeStatus(pckg.packageId, nextStatus)}
-                                    >
-                                        {nextStatus}
-                                    </button>
-                                ))}
-                            </td>
-                            <td>
-                                <nav><Link to={`/packages/${pckg.packageId}`}>Details</Link></nav>
-                                
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+           
         </div>
     );
 }
@@ -177,12 +207,12 @@ function PackageList() {
 
 function App() {
     return (
-        <>
+        <ThemeProvider theme={darkTheme }>
             <Routes>
                 <Route path="/" element={<PackageList />} />
                 <Route path="/packages/:id" element={<PackageDetails />} />
             </Routes>
-        </>
+        </ThemeProvider>
     );
 }
 
