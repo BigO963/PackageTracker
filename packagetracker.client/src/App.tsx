@@ -172,7 +172,7 @@ function PackageList() {
                     <TableBody>
                         {filteredPackages.map(pckg =>
                             <TableRow key={pckg.packageId}>
-                                <TableCell className={pckg.status}>{pckg.status}</TableCell>
+                                <th className={pckg.status}>{pckg.status}</th>
                                 <TableCell>{pckg.trackingNumber}</TableCell>
                                 <TableCell>{pckg.sender.senderName}</TableCell>
                                 <TableCell>{pckg.recipient.recipientName}</TableCell>
