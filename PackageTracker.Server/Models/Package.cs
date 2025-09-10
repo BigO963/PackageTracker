@@ -22,7 +22,7 @@ namespace PackageTracker.Server.Models
             TrackingNumber = GenerateTrackingNumber();
         }
 
-        public List<StatusHistory> History { get; set; }
+        public List<StatusHistory>? History { get; set; }
 
         //Pagalbinė funkcija naujam sekimo numeriui sukurti, kuris bus sudarytas iš didžiųjų raidžių ir skaičių ir bus 14 simbolių ilgio.
         public static string GenerateTrackingNumber()

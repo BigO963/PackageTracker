@@ -5,3 +5,11 @@ Accept: application/json
 ###
 GET {{PackageTracker.Server_HostAddress}}/package/{id}
 Accept: application/json
+###
+POST {{PackageTracker.Server_HostAddress}}/package/create
+Accept: application/json
+
+{
+  "packageId": "{{145663321}}",
+
+}
