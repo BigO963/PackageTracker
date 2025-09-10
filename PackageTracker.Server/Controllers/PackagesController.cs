@@ -106,6 +106,17 @@ namespace PackageTracker.Server.Controllers
 
             return Ok(statusHistory);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreatePackage([FromBody] Package package)
+        {
+            if (package == null) return BadRequest();
+
+            _context.Packages.Add(package);
+            await _context.SaveChangesAsync();
+
+            return Created();
+        }
         
     }
 }
