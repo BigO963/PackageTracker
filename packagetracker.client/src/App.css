@@ -15,17 +15,31 @@ th, td {
 }
 
 .Sent {
-    color: orange
+    color: orange;
 }
 
 .Accepted {
-    color: lawngreen
+    color: lawngreen;
 }
 
 .Returned {
-    color: mediumpurple
+    color: mediumpurple;
 }
 
 .Canceled {
-    color: red
+    color: red;
+}
+
+.addPackage {
+    color: white;
+}
+
+.package-wrapper {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+   
+.input-wrapper > input, select {
+    height: 50%;
 }
