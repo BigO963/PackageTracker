@@ -86,7 +86,7 @@ export default function AddPackage({ onPackageAdded }: AddPackageDialogProps) {
             // success
             setSuccessOpen(true);
             setOpen(false);
-
+            
             // reset form
             setSenderName("");
             setSenderAddress("");
